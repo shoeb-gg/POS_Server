@@ -20,6 +20,7 @@ export class UserService {
           created_at: true,
           updates_at: true,
           user_type_col: true,
+          password: true,
         },
       });
 

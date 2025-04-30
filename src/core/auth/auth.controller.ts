@@ -8,8 +8,6 @@ export class AuthController {
   //   @UseGuards(UserAuthGuard)
   @Post('auth/login')
   async login(@Body() userCreds) {
-    console.log(userCreds.email);
-
     return await this.auth.login(userCreds.email, userCreds.password);
   }
 }

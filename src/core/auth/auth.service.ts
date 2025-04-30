@@ -12,6 +12,7 @@ export class AuthService {
 
   async login(email: string, pass: string): Promise<any> {
     const user: USER | null = await this.users.findUser(email);
+
     if (user && user.password === pass) {
       const { password, ...result } = user;
       const payload = result;
