@@ -5,6 +5,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import helmet from 'helmet';
 
 declare const module: any;
 
@@ -20,6 +21,8 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
+  app.enableCors();
+  app.use(helmet());
 
   await app.listen(6009, '0.0.0.0');
 
