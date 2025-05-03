@@ -1,6 +1,6 @@
 import { user_type } from 'generated/prisma/client';
 
-export type USER = {
+export type USER_Decor = {
   last_name: string;
   first_name: string;
   email: string;
@@ -9,5 +9,5 @@ export type USER = {
   created_at?: Date;
   updated_at?: Date;
   user_type_col: user_type;
-  id?: number | null;
+  id: number;
 };
