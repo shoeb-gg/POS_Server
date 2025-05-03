@@ -9,5 +9,5 @@ export type USER = {
   created_at?: Date;
   updated_at?: Date;
   user_type_col: user_type;
-  id?: number;
+  id?: number | null;
 };

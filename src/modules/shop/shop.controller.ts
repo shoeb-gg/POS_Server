@@ -1,15 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
+import { ResponseDto } from 'src/common/models/response.dto';
+import { UserAuthGuard } from 'src/core/auth/utils/user-auth.guard';
+import { UserID } from 'src/core/auth/utils/user.decorator';
 
 @Controller('shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
+  @UseGuards(UserAuthGuard)
   @Post()
-  create(@Body() createShopDto: CreateShopDto) {
-    return this.shopService.create(createShopDto);
+  async create(
+    @Body() createShopDto: CreateShopDto,
+    @UserID() userID: number,
+  ): Promise<ResponseDto> {
+    return await this.shopService.create(createShopDto, userID);
   }
 
   @Get()

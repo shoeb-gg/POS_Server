@@ -14,11 +14,10 @@ export class AuthService {
     const user: USER | null = await this.users.findUser(email);
 
     if (user && user.password === pass) {
-      const { password, ...result } = user;
-      const payload = result;
+      const { password, id, ...result } = user;
+
       return {
-        access_token: this.jwtService.sign(payload),
-        ...result,
+        access_token: this.jwtService.sign({ id }),
       };
     }
     return null;
