@@ -6,6 +6,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import helmet from 'helmet';
+import fastifyCsrf from '@fastify/csrf-protection';
 
 declare const module: any;
 
@@ -23,6 +24,8 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory);
   app.enableCors();
   app.use(helmet());
+
+  await app.register(fastifyCsrf);
 
   await app.listen(6009, '0.0.0.0');
 
