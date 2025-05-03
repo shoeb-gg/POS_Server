@@ -7,7 +7,7 @@ export type USER = {
   password?: string;
   phone: string;
   created_at?: Date;
-  updates_at?: Date;
+  updated_at?: Date;
   user_type_col: user_type;
   id?: number;
 };
