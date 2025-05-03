@@ -15,9 +15,8 @@ export class AuthService {
 
     if (user && user.password === pass) {
       const { password, ...result } = user;
-      const payload = result;
       return {
-        access_token: this.jwtService.sign(payload),
+        access_token: this.jwtService.sign(result),
         ...result,
       };
     }
