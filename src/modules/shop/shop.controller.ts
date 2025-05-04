@@ -25,23 +25,31 @@ export class ShopController {
     return await this.shopService.create(createShopDto, userID);
   }
 
-  @Get()
-  findAll() {
-    return this.shopService.findAll();
+  @Get('all')
+  async findAll(): Promise<ResponseDto> {
+    return await this.shopService.findAll();
+  }
+
+  @Get('for-user')
+  async findAllForUser(@UserID() userID: number): Promise<ResponseDto> {
+    return await this.shopService.findAllForUser(userID);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.shopService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<ResponseDto> {
+    return await this.shopService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateShopDto: UpdateShopDto) {
-    return this.shopService.update(+id, updateShopDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateShopDto: UpdateShopDto,
+  ): Promise<ResponseDto> {
+    return await this.shopService.update(+id, updateShopDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.shopService.remove(+id);
+  async remove(@Param('id') id: string): Promise<ResponseDto> {
+    return await this.shopService.remove(+id);
   }
 }
