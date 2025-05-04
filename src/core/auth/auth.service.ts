@@ -18,6 +18,8 @@ export class AuthService {
 
       return {
         access_token: this.jwtService.sign({ id }),
+        email: result.email,
+        role: result.user_type_col,
       };
     }
     return null;
