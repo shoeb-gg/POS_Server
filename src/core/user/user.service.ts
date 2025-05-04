@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
+
   async findUser(email: string): Promise<USER | null> {
     try {
       const user: USER | null = await this.prisma.user.findUnique({
@@ -25,6 +26,18 @@ export class UserService {
       });
 
       return user;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async findAll(): Promise<USER[] | null> {
+    try {
+      const users: USER[] = await this.prisma.user.findMany();
+      const sanitizedUsers = users.map(({ password, ...rest }) => rest);
+
+      return sanitizedUsers;
     } catch (error) {
       console.error(error);
       return null;
