@@ -22,7 +22,13 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
-  app.enableCors();
+  app.enableCors({
+    origin: (origin, callback) => callback(null, true),
+    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    allowedHeaders: '*',
+    credentials: true,
+    preflightContinue: true,
+  });
   app.use(helmet());
 
   await app.register(fastifyCsrf);
