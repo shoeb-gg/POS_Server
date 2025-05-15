@@ -4,7 +4,7 @@ export class Shop {
   updated_at?: Date;
   name: string;
   address: string;
-  type_of_shop?: string | null;
-  description?: string | null;
+  type_of_shop: string | null;
+  description: string | null;
   user_id: number;
 }
