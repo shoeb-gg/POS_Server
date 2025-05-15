@@ -35,17 +35,20 @@ export class BrandController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.brandService.findOne(+id);
+  async findOne(@Param('id') id: number): Promise<ResponseDto> {
+    return await this.brandService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
-    return this.brandService.update(+id, updateBrandDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateBrandDto: UpdateBrandDto,
+  ): Promise<ResponseDto> {
+    return await this.brandService.update(+id, updateBrandDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.brandService.remove(+id);
+  async remove(@Param('id') id: number): Promise<ResponseDto> {
+    return await this.brandService.remove(+id);
   }
 }

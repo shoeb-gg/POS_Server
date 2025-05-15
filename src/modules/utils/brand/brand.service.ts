@@ -75,15 +75,89 @@ export class BrandService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} brand`;
+  async findOne(id: number): Promise<ResponseDto> {
+    try {
+      const brand: Brand | null = await this.prisma.brand.findUnique({
+        where: {
+          id: id,
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      });
+
+      return {
+        data: brand ? brand : {},
+        success: brand ? true : false,
+        message: brand
+          ? 'Brand Fetched Successfully!'
+          : `No Brand Found with id ${id}`,
+        status: brand ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Server Error while fetching Brand!',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  update(id: number, updateBrandDto: UpdateBrandDto) {
-    return `This action updates a #${id} brand`;
+  async update(
+    id: number,
+    updateBrandDto: UpdateBrandDto,
+  ): Promise<ResponseDto> {
+    try {
+      const brand: Brand | null = await this.prisma.brand.update({
+        data: {
+          ...updateBrandDto,
+        },
+        where: {
+          id: id,
+        },
+      });
+
+      return {
+        data: brand ? brand : {},
+        success: brand ? true : false,
+        message: brand
+          ? 'Brand updated Successfully!'
+          : `No Brand Found with id ${id}`,
+        status: brand ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Server Error while updating Brand!',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} brand`;
+  async remove(id: number): Promise<ResponseDto> {
+    try {
+      const brand: Brand | null = await this.prisma.brand.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      return {
+        data: {},
+        success: brand ? true : false,
+        message: brand
+          ? 'Brand deleted Successfully!'
+          : `No Brand Found with id ${id}`,
+        status: brand ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Server Error while deleting Brand!',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
