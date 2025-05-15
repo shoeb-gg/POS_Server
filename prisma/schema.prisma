@@ -9,16 +9,24 @@ datasource db {
 }
 
 model user {
-  first_name    String
-  last_name     String
-  email         String    @unique
-  password      String
-  phone         String
-  created_at    DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
-  user_type_col user_type
-  id            Int       @id @default(autoincrement())
-  shop          shop[]
+  first_name       String
+  last_name        String
+  email            String             @unique
+  password         String
+  phone            String
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  user_type_col    user_type
+  id               Int                @id @default(autoincrement())
+  updated_at       DateTime           @default(now()) @db.Timestamptz(6)
+  brand            brand[]
+  category         category[]
+  currency         currency[]
+  customer         customer[]
+  expense          expense[]
+  expense_category expense_category[]
+  quantity_unit    quantity_unit[]
+  shop             shop[]
+  supplier         supplier[]
 
   @@index([id, email, phone, created_at, updated_at], map: "index_1")
 }
@@ -35,6 +43,100 @@ model shop {
   user         user     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([id, name, created_at, updated_at], map: "index_shop")
+}
+
+model brand {
+  id      Int     @id @default(autoincrement())
+  name    String
+  image   String?
+  user_id Int
+  user    user    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id")
+
+  @@index([id, name], map: "index_brand")
+}
+
+model category {
+  id      Int     @id @default(autoincrement())
+  name    String
+  image   String?
+  user_id Int
+  user    user    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id")
+
+  @@index([id, name], map: "index_category")
+}
+
+model currency {
+  id                                 Int       @id @default(autoincrement())
+  name                               String
+  short_name                         String
+  symbol                             String?
+  user_id                            Int
+  user                               user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id")
+  expense_expense_currencyTocurrency expense[] @relation("expense_currencyTocurrency")
+
+  @@index([id, name, short_name], map: "index_currency")
+}
+
+model customer {
+  id      Int     @id @default(autoincrement())
+  name    String
+  email   String?
+  phone   String
+  dob     String?
+  country String?
+  city    String?
+  address String?
+  user_id Int
+  user    user    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_user_id")
+}
+
+model expense {
+  id                                                          Int              @id @default(autoincrement())
+  name                                                        String
+  expense_category                                            Int              @default(autoincrement())
+  amount                                                      String           @default("0")
+  shop_id                                                     Int
+  currency                                                    Int              @default(autoincrement())
+  currency_expense_currencyTocurrency                         currency         @relation("expense_currencyTocurrency", fields: [currency], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "constraint_currency")
+  expense_category_expense_expense_categoryToexpense_category expense_category @relation("expense_expense_categoryToexpense_category", fields: [expense_category], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "expense_category")
+  user                                                        user             @relation(fields: [shop_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "shop_id")
+
+  @@index([id, name], map: "index_expense")
+}
+
+model expense_category {
+  id                                                 Int       @id @default(autoincrement())
+  name                                               String
+  user_id                                            Int
+  expense_expense_expense_categoryToexpense_category expense[] @relation("expense_expense_categoryToexpense_category")
+  user                                               user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_1")
+
+  @@index([id, name], map: "index_expense_category")
+}
+
+model quantity_unit {
+  id         Int    @id @default(autoincrement())
+  name       String
+  short_name String
+  user_id    Int
+  user       user   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_quantity_unit")
+
+  @@index([id, name], map: "index_quantity_unit")
+}
+
+model supplier {
+  id      Int     @id @default(autoincrement())
+  name    String
+  email   String?
+  phone   String
+  country String?
+  city    String?
+  company String?
+  address String?
+  user_id Int
+  user    user    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_supplier")
+
+  @@index([id, name, phone], map: "index_supplier")
 }
 
 enum user_type {
