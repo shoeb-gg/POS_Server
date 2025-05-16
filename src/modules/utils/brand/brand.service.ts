@@ -3,7 +3,10 @@ import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { Brand } from './entities/brand.entity';
 import { PrismaService } from 'src/prisma.service';
-import { ResponseDto } from 'src/common/models/response.dto';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 
 @Injectable()
 export class BrandService {
@@ -42,32 +45,23 @@ export class BrandService {
     userId: number,
     pageNumber: number,
     pageSize: number,
-    query?: string,
-  ): Promise<ResponseDto> {
+    query: string = '',
+  ): Promise<FindAllResponseDto> {
     try {
-      //convert string to number
-      const formatPageSize = Number(pageSize);
-      const formatPageNumber = Number(pageNumber);
-      //search query
-      const searchQuery = query?.toLowerCase() || '';
-      //conditions based on search or blank search
       const conditions: any = {
         user_id: userId,
         name: {
-          contains: searchQuery,
+          contains: query,
           mode: 'insensitive',
         },
       };
-
-      //pagination
-      const offset = (pageNumber - 1) * pageSize;
 
       const [brands, total]: [Brand[], number] = await this.prisma.$transaction(
         [
           this.prisma.brand.findMany({
             where: conditions,
-            skip: offset,
-            take: formatPageSize,
+            skip: (pageNumber - 1) * pageSize,
+            take: pageSize,
             orderBy: {
               name: 'asc',
             },
@@ -77,21 +71,18 @@ export class BrandService {
               image: true,
             },
           }),
-          //count
           this.prisma.brand.count({
             where: conditions,
           }),
         ],
       );
 
-      const totalPages = Math.ceil(total / pageSize);
-
       return {
         data: { brands, total },
         pagination: {
-          currentPage: formatPageNumber,
-          pageSize: formatPageSize,
-          totalPages,
+          currentPage: pageNumber,
+          pageSize: pageSize,
+          totalPages: Math.ceil(total / pageSize),
         },
         success: true,
         message: 'Brands Fetched Successfully!',

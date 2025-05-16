@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -25,13 +26,19 @@ export class CategoryController {
     return await this.categoryService.create(createCategoryDto, +userID);
   }
 
-  @Get('all/:pageNumber/:pageSize')
+  @Get('all')
   async findAll(
-    @Param('pageNumber') pageNumber: number,
-    @Param('pageSize') pageSize: number,
     @UserID() userID: number,
-  ): Promise<ResponseDto> {
-    return await this.categoryService.findAll(+pageNumber, +pageSize, +userID);
+    @Query('pageNumber') pageNumber: number,
+    @Query('pageSize') pageSize: number,
+    @Query('query') query: string,
+  ) {
+    return await this.categoryService.findAll(
+      +userID,
+      +pageNumber,
+      +pageSize,
+      query,
+    );
   }
 
   @Get(':id')
