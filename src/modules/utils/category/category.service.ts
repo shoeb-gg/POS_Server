@@ -3,7 +3,10 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma.service';
 import { Category } from './entities/category.entity';
-import { ResponseDto } from 'src/common/models/response.dto';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 
 @Injectable()
 export class CategoryService {
@@ -39,17 +42,24 @@ export class CategoryService {
   }
 
   async findAll(
+    userId: number,
     pageNumber: number,
     pageSize: number,
-    userId: number,
-  ): Promise<ResponseDto> {
+    query: string = '',
+  ): Promise<FindAllResponseDto> {
     try {
+      const conditions: any = {
+        user_id: userId,
+        name: {
+          contains: query,
+          mode: 'insensitive',
+        },
+      };
+
       const [categories, total]: [Category[], number] =
         await this.prisma.$transaction([
           this.prisma.category.findMany({
-            where: {
-              user_id: userId,
-            },
+            where: conditions,
             skip: (pageNumber - 1) * pageSize,
             take: pageSize,
             orderBy: {
@@ -61,19 +71,26 @@ export class CategoryService {
               image: true,
             },
           }),
-          this.prisma.category.count(),
+          this.prisma.category.count({
+            where: conditions,
+          }),
         ]);
 
       return {
         data: { categories, total },
+        pagination: {
+          currentPage: pageNumber,
+          pageSize: pageSize,
+          totalPages: Math.ceil(total / pageSize),
+        },
         success: true,
-        message: 'Categories Fetched Successfully!',
+        message: 'Category Fetched Successfully!',
         status: categories.length === 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK,
       };
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Server Error while fetching all Categories!',
+        'Server Error while fetching all Category!',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

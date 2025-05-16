@@ -31,9 +31,14 @@ export class BrandController {
     @UserID() userID: number,
     @Query('pageNumber') pageNumber: number,
     @Query('pageSize') pageSize: number,
-    @Query('query') query?: string,
+    @Query('query') query: string,
   ) {
-    return await this.brandService.findAll(userID, pageNumber, pageSize, query);
+    return await this.brandService.findAll(
+      +userID,
+      +pageNumber,
+      +pageSize,
+      query,
+    );
   }
 
   @Get(':id')
