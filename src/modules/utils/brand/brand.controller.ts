@@ -12,7 +12,10 @@ import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { UserID } from 'src/core/auth/utils/user.decorator';
-import { ResponseDto } from 'src/common/models/response.dto';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 
 @Controller('brand')
 export class BrandController {
@@ -32,7 +35,7 @@ export class BrandController {
     @Query('pageNumber') pageNumber: number,
     @Query('pageSize') pageSize: number,
     @Query('query') query: string,
-  ) {
+  ): Promise<FindAllResponseDto> {
     return await this.brandService.findAll(
       +userID,
       +pageNumber,

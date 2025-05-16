@@ -8,9 +8,10 @@ import { AppService } from './app.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './core/auth/utils/user-auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { SupplierModule } from './modules/entities/supplier/supplier.module';
 
 @Module({
-  imports: [UtilsModule, ShopModule, UserModule, AuthModule],
+  imports: [UtilsModule, ShopModule, UserModule, AuthModule, SupplierModule],
   controllers: [AppController],
   providers: [
     AppService,

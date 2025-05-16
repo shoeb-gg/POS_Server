@@ -125,16 +125,18 @@ model quantity_unit {
 }
 
 model supplier {
-  id      Int     @id @default(autoincrement())
-  name    String
-  email   String?
-  phone   String
-  country String?
-  city    String?
-  company String?
-  address String?
-  user_id Int
-  user    user    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_supplier")
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String?
+  phone      String
+  country    String?
+  city       String?
+  company    String?
+  address    String?
+  user_id    Int
+  created_on DateTime @default(now()) @db.Timestamptz(6)
+  updated_on DateTime @default(now()) @db.Timestamptz(6)
+  user       user     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_supplier")
 
   @@index([id, name, phone], map: "index_supplier")
 }
