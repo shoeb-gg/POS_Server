@@ -1,21 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateBrandDto } from './dto/create-brand.dto';
-import { UpdateBrandDto } from './dto/update-brand.dto';
-import { Brand } from './entities/brand.entity';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma.service';
+import { Category } from './entities/category.entity';
 import { ResponseDto } from 'src/common/models/response.dto';
 
 @Injectable()
-export class BrandService {
+export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(
-    createBrandDto: CreateBrandDto,
+    createCategoryDto: CreateCategoryDto,
     userId: number,
   ): Promise<ResponseDto> {
     try {
-      const newBrand: Brand = await this.prisma.brand.create({
-        data: { ...createBrandDto, user_id: userId },
+      const newCategory: Category = await this.prisma.category.create({
+        data: { ...createCategoryDto, user_id: userId },
         select: {
           id: true,
           name: true,
@@ -24,15 +24,15 @@ export class BrandService {
       });
 
       return {
-        data: newBrand,
+        data: newCategory,
         success: true,
-        message: 'Brand Created Successfully!',
+        message: 'Category Created Successfully!',
         status: HttpStatus.CREATED,
       };
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Server Error while creating Brand!',
+        'Server Error while creating Category!',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -44,9 +44,9 @@ export class BrandService {
     userId: number,
   ): Promise<ResponseDto> {
     try {
-      const [brands, total]: [Brand[], number] = await this.prisma.$transaction(
-        [
-          this.prisma.brand.findMany({
+      const [categories, total]: [Category[], number] =
+        await this.prisma.$transaction([
+          this.prisma.category.findMany({
             where: {
               user_id: userId,
             },
@@ -61,20 +61,19 @@ export class BrandService {
               image: true,
             },
           }),
-          this.prisma.brand.count(),
-        ],
-      );
+          this.prisma.category.count(),
+        ]);
 
       return {
-        data: { brands, total },
+        data: { categories, total },
         success: true,
-        message: 'Brands Fetched Successfully!',
-        status: brands.length === 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK,
+        message: 'Categories Fetched Successfully!',
+        status: categories.length === 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK,
       };
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Server Error while fetching all Brands!',
+        'Server Error while fetching all Categories!',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -82,7 +81,7 @@ export class BrandService {
 
   async findOne(id: number): Promise<ResponseDto> {
     try {
-      const brand: Brand | null = await this.prisma.brand.findUnique({
+      const category: Category | null = await this.prisma.category.findUnique({
         where: {
           id: id,
         },
@@ -94,17 +93,17 @@ export class BrandService {
       });
 
       return {
-        data: brand ? brand : {},
-        success: brand ? true : false,
-        message: brand
-          ? 'Brand Fetched Successfully!'
-          : `No Brand Found with id ${id}`,
-        status: brand ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        data: category ? category : {},
+        success: category ? true : false,
+        message: category
+          ? 'Category Fetched Successfully!'
+          : `No Category Found with id ${id}`,
+        status: category ? HttpStatus.OK : HttpStatus.NO_CONTENT,
       };
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Server Error while fetching Brand!',
+        'Server Error while fetching Category!',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -112,12 +111,12 @@ export class BrandService {
 
   async update(
     id: number,
-    updateBrandDto: UpdateBrandDto,
+    updateCategoryDto: UpdateCategoryDto,
   ): Promise<ResponseDto> {
     try {
-      const brand: Brand | null = await this.prisma.brand.update({
+      const category: Category | null = await this.prisma.category.update({
         data: {
-          ...updateBrandDto,
+          ...updateCategoryDto,
         },
         where: {
           id: id,
@@ -125,17 +124,17 @@ export class BrandService {
       });
 
       return {
-        data: brand ? brand : {},
-        success: brand ? true : false,
-        message: brand
-          ? 'Brand updated Successfully!'
-          : `No Brand Found with id ${id}`,
-        status: brand ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        data: category ? category : {},
+        success: category ? true : false,
+        message: category
+          ? 'Category updated Successfully!'
+          : `No Category Found with id ${id}`,
+        status: category ? HttpStatus.OK : HttpStatus.NO_CONTENT,
       };
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Server Error while updating Brand!',
+        'Server Error while updating Category!',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -143,7 +142,7 @@ export class BrandService {
 
   async remove(id: number): Promise<ResponseDto> {
     try {
-      const brand: Brand | null = await this.prisma.brand.delete({
+      const category: Category | null = await this.prisma.category.delete({
         where: {
           id: id,
         },
@@ -151,16 +150,16 @@ export class BrandService {
 
       return {
         data: {},
-        success: brand ? true : false,
-        message: brand
-          ? 'Brand deleted Successfully!'
-          : `No Brand Found with id ${id}`,
-        status: brand ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
+        success: category ? true : false,
+        message: category
+          ? 'Category deleted Successfully!'
+          : `No Category Found with id ${id}`,
+        status: category ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
       };
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Server Error while deleting Brand!',
+        'Server Error while deleting Category!',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
