@@ -39,19 +39,35 @@ export class BrandService {
   }
 
   async findAll(
+    userId: number,
     pageNumber: number,
     pageSize: number,
-    userId: number,
+    query?: string,
   ): Promise<ResponseDto> {
     try {
+      //convert string to number
+      const formatPageSize = Number(pageSize);
+      const formatPageNumber = Number(pageNumber);
+      //search query
+      const searchQuery = query?.toLowerCase() || '';
+      //conditions based on search or blank search
+      const conditions: any = {
+        user_id: userId,
+        name: {
+          contains: searchQuery,
+          mode: 'insensitive',
+        },
+      };
+
+      //pagination
+      const offset = (pageNumber - 1) * pageSize;
+
       const [brands, total]: [Brand[], number] = await this.prisma.$transaction(
         [
           this.prisma.brand.findMany({
-            where: {
-              user_id: userId,
-            },
-            skip: (pageNumber - 1) * pageSize,
-            take: pageSize,
+            where: conditions,
+            skip: offset,
+            take: formatPageSize,
             orderBy: {
               name: 'asc',
             },
@@ -61,12 +77,22 @@ export class BrandService {
               image: true,
             },
           }),
-          this.prisma.brand.count(),
+          //count
+          this.prisma.brand.count({
+            where: conditions,
+          }),
         ],
       );
 
+      const totalPages = Math.ceil(total / pageSize);
+
       return {
         data: { brands, total },
+        pagination: {
+          currentPage: formatPageNumber,
+          pageSize: formatPageSize,
+          totalPages,
+        },
         success: true,
         message: 'Brands Fetched Successfully!',
         status: brands.length === 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK,
