@@ -138,6 +138,11 @@ export class CategoryService {
         where: {
           id: id,
         },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
       });
 
       return {
