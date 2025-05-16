@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
@@ -25,13 +26,14 @@ export class BrandController {
     return await this.brandService.create(createBrandDto, +userID);
   }
 
-  @Get('all/:pageNumber/:pageSize')
+  @Get('all')
   async findAll(
-    @Param('pageNumber') pageNumber: number,
-    @Param('pageSize') pageSize: number,
     @UserID() userID: number,
+    @Query('pageNumber') pageNumber: number,
+    @Query('pageSize') pageSize: number,
+    @Query('query') query?: string,
   ) {
-    return await this.brandService.findAll(+pageNumber, +pageSize, +userID);
+    return await this.brandService.findAll(userID, pageNumber, pageSize, query);
   }
 
   @Get(':id')
