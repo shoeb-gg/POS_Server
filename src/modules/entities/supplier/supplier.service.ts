@@ -12,7 +12,7 @@ export class SupplierService {
   async create(
     createSupplierDto: CreateSupplierDto,
     userId: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Supplier>> {
     try {
       const newSupplier: Supplier = await this.prisma.supplier.create({
         data: { ...createSupplierDto, user_id: userId },

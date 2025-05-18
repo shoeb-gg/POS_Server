@@ -11,7 +11,11 @@ import {
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ResponseDto } from 'src/common/models/response.dto';
+import { Category } from './entities/category.entity';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 import { UserID } from 'src/core/auth/utils/user.decorator';
 
 @Controller('category')
@@ -22,7 +26,7 @@ export class CategoryController {
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
     @UserID() userID: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Category>> {
     return await this.categoryService.create(createCategoryDto, +userID);
   }
 
@@ -32,7 +36,7 @@ export class CategoryController {
     @Query('pageNumber') pageNumber: number,
     @Query('pageSize') pageSize: number,
     @Query('query') query: string,
-  ) {
+  ): Promise<FindAllResponseDto<Category[]>> {
     return await this.categoryService.findAll(
       +userID,
       +pageNumber,
@@ -42,7 +46,9 @@ export class CategoryController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<ResponseDto> {
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<ResponseDto<Category | null>> {
     return await this.categoryService.findOne(+id);
   }
 
@@ -50,12 +56,12 @@ export class CategoryController {
   async update(
     @Param('id') id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Category | null>> {
     return await this.categoryService.update(+id, updateCategoryDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<ResponseDto> {
+  async remove(@Param('id') id: number): Promise<ResponseDto<null>> {
     return await this.categoryService.remove(+id);
   }
 }

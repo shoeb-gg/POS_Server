@@ -10,6 +10,7 @@ import {
 import { SupplierService } from './supplier.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { Supplier } from './entities/supplier.entity';
 import { UserID } from 'src/core/auth/utils/user.decorator';
 import { ResponseDto } from 'src/common/models/response.dto';
 
@@ -21,7 +22,7 @@ export class SupplierController {
   async create(
     @Body() createSupplierDto: CreateSupplierDto,
     @UserID() userID: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Supplier | null>> {
     return await this.supplierService.create(createSupplierDto, +userID);
   }
 

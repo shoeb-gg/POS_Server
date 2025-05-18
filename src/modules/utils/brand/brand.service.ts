@@ -15,7 +15,7 @@ export class BrandService {
   async create(
     createBrandDto: CreateBrandDto,
     userId: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Brand>> {
     try {
       const newBrand: Brand = await this.prisma.brand.create({
         data: { ...createBrandDto, user_id: userId },
@@ -46,7 +46,7 @@ export class BrandService {
     pageNumber: number,
     pageSize: number,
     query: string = '',
-  ): Promise<FindAllResponseDto> {
+  ): Promise<FindAllResponseDto<Brand[]>> {
     try {
       const conditions: any = {
         user_id: userId,
@@ -78,7 +78,8 @@ export class BrandService {
       );
 
       return {
-        data: { brands, total },
+        data: brands,
+        total: total,
         pagination: {
           currentPage: pageNumber,
           pageSize: pageSize,
@@ -97,7 +98,7 @@ export class BrandService {
     }
   }
 
-  async findOne(id: number): Promise<ResponseDto> {
+  async findOne(id: number): Promise<ResponseDto<Brand | null>> {
     try {
       const brand: Brand | null = await this.prisma.brand.findUnique({
         where: {
@@ -111,7 +112,7 @@ export class BrandService {
       });
 
       return {
-        data: brand ? brand : {},
+        data: brand ? brand : null,
         success: brand ? true : false,
         message: brand
           ? 'Brand Fetched Successfully!'
@@ -130,7 +131,7 @@ export class BrandService {
   async update(
     id: number,
     updateBrandDto: UpdateBrandDto,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Brand | null>> {
     try {
       const brand: Brand | null = await this.prisma.brand.update({
         data: {
@@ -147,7 +148,7 @@ export class BrandService {
       });
 
       return {
-        data: brand ? brand : {},
+        data: brand ? brand : null,
         success: brand ? true : false,
         message: brand
           ? 'Brand updated Successfully!'
@@ -163,7 +164,7 @@ export class BrandService {
     }
   }
 
-  async remove(id: number): Promise<ResponseDto> {
+  async remove(id: number): Promise<ResponseDto<null>> {
     try {
       const brand: Brand | null = await this.prisma.brand.delete({
         where: {
@@ -172,7 +173,7 @@ export class BrandService {
       });
 
       return {
-        data: {},
+        data: null,
         success: brand ? true : false,
         message: brand
           ? 'Brand deleted Successfully!'
