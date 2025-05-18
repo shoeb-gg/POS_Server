@@ -1,18 +1,15 @@
 import { HttpStatus } from '@nestjs/common';
 
-export type ResponseDto = {
-  data: any;
+export type ResponseDto<T> = {
+  data: T;
   success: boolean;
   message: string;
   status: HttpStatus;
 };
 
-export type FindAllResponseDto = {
-  data: any;
+export type FindAllResponseDto<T> = ResponseDto<T> & {
+  total: number;
   pagination: Pagination;
-  success: boolean;
-  message: string;
-  status: HttpStatus;
 };
 
 export type Pagination = {

@@ -12,7 +12,7 @@ export class ShopService {
   async create(
     createShopDto: CreateShopDto,
     userId: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Shop>> {
     try {
       const newShop: Shop = await this.prisma.shop.create({
         data: { ...createShopDto, user_id: userId },
@@ -33,7 +33,7 @@ export class ShopService {
     }
   }
 
-  async findAll(): Promise<ResponseDto> {
+  async findAll(): Promise<ResponseDto<Shop[]>> {
     try {
       const shops: Shop[] = await this.prisma.shop.findMany();
 
@@ -52,7 +52,7 @@ export class ShopService {
     }
   }
 
-  async findAllForUser(userId: number): Promise<ResponseDto> {
+  async findAllForUser(userId: number): Promise<ResponseDto<Shop[]>> {
     try {
       const shops: Shop[] = await this.prisma.shop.findMany({
         where: {
@@ -78,7 +78,7 @@ export class ShopService {
     }
   }
 
-  async findOne(id: number): Promise<ResponseDto> {
+  async findOne(id: number): Promise<ResponseDto<Shop | null>> {
     try {
       const shop: Shop | null = await this.prisma.shop.findUnique({
         where: {
@@ -87,7 +87,7 @@ export class ShopService {
       });
 
       return {
-        data: shop ? shop : {},
+        data: shop ? shop : null,
         success: shop ? true : false,
         message: shop
           ? 'Shop Fetched Successfully!'
@@ -103,7 +103,10 @@ export class ShopService {
     }
   }
 
-  async update(id: number, updateShopDto: UpdateShopDto): Promise<ResponseDto> {
+  async update(
+    id: number,
+    updateShopDto: UpdateShopDto,
+  ): Promise<ResponseDto<Shop | null>> {
     try {
       const shop: Shop | null = await this.prisma.shop.update({
         data: {
@@ -115,7 +118,7 @@ export class ShopService {
       });
 
       return {
-        data: shop ? shop : {},
+        data: shop ? shop : null,
         success: shop ? true : false,
         message: shop
           ? 'Shop updated Successfully!'
@@ -131,7 +134,7 @@ export class ShopService {
     }
   }
 
-  async remove(id: number): Promise<ResponseDto> {
+  async remove(id: number): Promise<ResponseDto<null>> {
     try {
       const shop: Shop | null = await this.prisma.shop.delete({
         where: {
@@ -140,7 +143,7 @@ export class ShopService {
       });
 
       return {
-        data: {},
+        data: null,
         success: shop ? true : false,
         message: shop
           ? 'Shop deleted Successfully!'

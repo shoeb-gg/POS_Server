@@ -15,7 +15,7 @@ export class QuantityUnitService {
   async create(
     createQuantityUnitDto: CreateQuantityUnitDto,
     userId: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<QuantityUnit>> {
     try {
       const newQuantityUnit: QuantityUnit =
         await this.prisma.quantity_unit.create({
@@ -47,7 +47,7 @@ export class QuantityUnitService {
     pageNumber: number,
     pageSize: number,
     query: string = '',
-  ): Promise<FindAllResponseDto> {
+  ): Promise<FindAllResponseDto<QuantityUnit[]>> {
     try {
       const conditions: any = {
         user_id: userId,
@@ -78,7 +78,8 @@ export class QuantityUnitService {
         ]);
 
       return {
-        data: { quantityUnits, total },
+        data: quantityUnits,
+        total: total,
         pagination: {
           currentPage: pageNumber,
           pageSize: pageSize,
@@ -98,7 +99,7 @@ export class QuantityUnitService {
     }
   }
 
-  async findOne(id: number): Promise<ResponseDto> {
+  async findOne(id: number): Promise<ResponseDto<QuantityUnit | null>> {
     try {
       const quantityUnit: QuantityUnit | null =
         await this.prisma.quantity_unit.findUnique({
@@ -113,7 +114,7 @@ export class QuantityUnitService {
         });
 
       return {
-        data: quantityUnit ? quantityUnit : {},
+        data: quantityUnit ? quantityUnit : null,
         success: quantityUnit ? true : false,
         message: quantityUnit
           ? 'Quantity Unit Fetched Successfully!'
@@ -129,7 +130,10 @@ export class QuantityUnitService {
     }
   }
 
-  async update(id: number, updateQuantityUnitDto: UpdateQuantityUnitDto) {
+  async update(
+    id: number,
+    updateQuantityUnitDto: UpdateQuantityUnitDto,
+  ): Promise<ResponseDto<QuantityUnit | null>> {
     try {
       const quantityUnit: QuantityUnit | null =
         await this.prisma.quantity_unit.update({
@@ -147,7 +151,7 @@ export class QuantityUnitService {
         });
 
       return {
-        data: quantityUnit ? quantityUnit : {},
+        data: quantityUnit ? quantityUnit : null,
         success: quantityUnit ? true : false,
         message: quantityUnit
           ? 'Quantity Unit updated Successfully!'
@@ -163,7 +167,7 @@ export class QuantityUnitService {
     }
   }
 
-  async remove(id: number): Promise<ResponseDto> {
+  async remove(id: number): Promise<ResponseDto<null>> {
     try {
       const quantityUnit: QuantityUnit | null =
         await this.prisma.quantity_unit.delete({
@@ -173,7 +177,7 @@ export class QuantityUnitService {
         });
 
       return {
-        data: {},
+        data: null,
         success: quantityUnit ? true : false,
         message: quantityUnit
           ? 'Quantity Unit deleted Successfully!'

@@ -15,7 +15,7 @@ export class CategoryService {
   async create(
     createCategoryDto: CreateCategoryDto,
     userId: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Category>> {
     try {
       const newCategory: Category = await this.prisma.category.create({
         data: { ...createCategoryDto, user_id: userId },
@@ -46,7 +46,7 @@ export class CategoryService {
     pageNumber: number,
     pageSize: number,
     query: string = '',
-  ): Promise<FindAllResponseDto> {
+  ): Promise<FindAllResponseDto<Category[]>> {
     try {
       const conditions: any = {
         user_id: userId,
@@ -77,7 +77,8 @@ export class CategoryService {
         ]);
 
       return {
-        data: { categories, total },
+        data: categories,
+        total: total,
         pagination: {
           currentPage: pageNumber,
           pageSize: pageSize,
@@ -96,7 +97,7 @@ export class CategoryService {
     }
   }
 
-  async findOne(id: number): Promise<ResponseDto> {
+  async findOne(id: number): Promise<ResponseDto<Category | null>> {
     try {
       const category: Category | null = await this.prisma.category.findUnique({
         where: {
@@ -110,7 +111,7 @@ export class CategoryService {
       });
 
       return {
-        data: category ? category : {},
+        data: category ? category : null,
         success: category ? true : false,
         message: category
           ? 'Category Fetched Successfully!'
@@ -129,7 +130,7 @@ export class CategoryService {
   async update(
     id: number,
     updateCategoryDto: UpdateCategoryDto,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Category | null>> {
     try {
       const category: Category | null = await this.prisma.category.update({
         data: {
@@ -146,7 +147,7 @@ export class CategoryService {
       });
 
       return {
-        data: category ? category : {},
+        data: category ? category : null,
         success: category ? true : false,
         message: category
           ? 'Category updated Successfully!'
@@ -162,7 +163,7 @@ export class CategoryService {
     }
   }
 
-  async remove(id: number): Promise<ResponseDto> {
+  async remove(id: number): Promise<ResponseDto<null>> {
     try {
       const category: Category | null = await this.prisma.category.delete({
         where: {
@@ -171,7 +172,7 @@ export class CategoryService {
       });
 
       return {
-        data: {},
+        data: null,
         success: category ? true : false,
         message: category
           ? 'Category deleted Successfully!'

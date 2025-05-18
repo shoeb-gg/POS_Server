@@ -11,7 +11,11 @@ import {
 import { QuantityUnitService } from './quantity_unit.service';
 import { CreateQuantityUnitDto } from './dto/create-quantity_unit.dto';
 import { UpdateQuantityUnitDto } from './dto/update-quantity_unit.dto';
-import { ResponseDto } from 'src/common/models/response.dto';
+import { QuantityUnit } from './entities/quantity_unit.entity';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 import { UserID } from 'src/core/auth/utils/user.decorator';
 
 @Controller('quantity-unit')
@@ -22,7 +26,7 @@ export class QuantityUnitController {
   async create(
     @Body() createQuantityUnitDto: CreateQuantityUnitDto,
     @UserID() userID: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<QuantityUnit>> {
     return await this.quantityUnitService.create(
       createQuantityUnitDto,
       +userID,
@@ -35,7 +39,7 @@ export class QuantityUnitController {
     @Query('pageNumber') pageNumber: number,
     @Query('pageSize') pageSize: number,
     @Query('query') query: string,
-  ) {
+  ): Promise<FindAllResponseDto<QuantityUnit[]>> {
     return await this.quantityUnitService.findAll(
       +userID,
       +pageNumber,
@@ -45,7 +49,9 @@ export class QuantityUnitController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<ResponseDto> {
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<ResponseDto<QuantityUnit | null>> {
     return await this.quantityUnitService.findOne(+id);
   }
 
@@ -53,12 +59,12 @@ export class QuantityUnitController {
   async update(
     @Param('id') id: number,
     @Body() updateQuantityUnitDto: UpdateQuantityUnitDto,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<QuantityUnit | null>> {
     return await this.quantityUnitService.update(+id, updateQuantityUnitDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<ResponseDto> {
+  async remove(@Param('id') id: number): Promise<ResponseDto<null>> {
     return await this.quantityUnitService.remove(+id);
   }
 }

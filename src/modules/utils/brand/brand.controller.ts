@@ -11,6 +11,7 @@ import {
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
+import { Brand } from './entities/brand.entity';
 import { UserID } from 'src/core/auth/utils/user.decorator';
 import {
   FindAllResponseDto,
@@ -25,7 +26,7 @@ export class BrandController {
   async create(
     @Body() createBrandDto: CreateBrandDto,
     @UserID() userID: number,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Brand>> {
     return await this.brandService.create(createBrandDto, +userID);
   }
 
@@ -35,7 +36,7 @@ export class BrandController {
     @Query('pageNumber') pageNumber: number,
     @Query('pageSize') pageSize: number,
     @Query('query') query: string,
-  ): Promise<FindAllResponseDto> {
+  ): Promise<FindAllResponseDto<Brand[]>> {
     return await this.brandService.findAll(
       +userID,
       +pageNumber,
@@ -45,7 +46,7 @@ export class BrandController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<ResponseDto> {
+  async findOne(@Param('id') id: number): Promise<ResponseDto<Brand | null>> {
     return await this.brandService.findOne(+id);
   }
 
@@ -53,12 +54,12 @@ export class BrandController {
   async update(
     @Param('id') id: number,
     @Body() updateBrandDto: UpdateBrandDto,
-  ): Promise<ResponseDto> {
+  ): Promise<ResponseDto<Brand | null>> {
     return await this.brandService.update(+id, updateBrandDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<ResponseDto> {
+  async remove(@Param('id') id: number): Promise<ResponseDto<null>> {
     return await this.brandService.remove(+id);
   }
 }
