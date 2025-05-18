@@ -9,17 +9,36 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { SupplierModule } from './modules/entities/supplier/supplier.module';
 import { AuthGuard } from './core/utils/user-auth.guard';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
-  imports: [UtilsModule, ShopModule, UserModule, AuthModule, SupplierModule],
+  imports: [
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 100,
+        },
+      ],
+    }),
+    UtilsModule,
+    ShopModule,
+    UserModule,
+    AuthModule,
+    SupplierModule,
+  ],
   controllers: [AppController],
   providers: [
-    AppService,
-    JwtService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    AppService,
+    JwtService,
   ],
 })
 export class AppModule {}
