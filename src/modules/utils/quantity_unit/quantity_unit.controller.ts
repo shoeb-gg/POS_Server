@@ -16,7 +16,7 @@ import {
   FindAllResponseDto,
   ResponseDto,
 } from 'src/common/models/response.dto';
-import { UserID } from 'src/core/auth/utils/user.decorator';
+import { UserID } from 'src/core/utils/user.decorator';
 
 @Controller('quantity-unit')
 export class QuantityUnitController {
