@@ -6,9 +6,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './core/auth/utils/user-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { SupplierModule } from './modules/entities/supplier/supplier.module';
+import { AuthGuard } from './core/utils/user-auth.guard';
 
 @Module({
   imports: [UtilsModule, ShopModule, UserModule, AuthModule, SupplierModule],

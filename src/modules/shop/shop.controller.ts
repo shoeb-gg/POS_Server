@@ -12,7 +12,7 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { Shop } from './entities/shop.entity';
 import { ResponseDto } from 'src/common/models/response.dto';
-import { UserID } from 'src/core/auth/utils/user.decorator';
+import { UserID } from 'src/core/utils/user.decorator';
 
 @Controller('shop')
 export class ShopController {

@@ -12,11 +12,11 @@ import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { Brand } from './entities/brand.entity';
-import { UserID } from 'src/core/auth/utils/user.decorator';
 import {
   FindAllResponseDto,
   ResponseDto,
 } from 'src/common/models/response.dto';
+import { UserID } from 'src/core/utils/user.decorator';
 
 @Controller('brand')
 export class BrandController {
