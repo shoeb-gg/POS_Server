@@ -1,16 +1,6 @@
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateQuantityUnitDto {
-  @IsOptional()
-  @IsPositive()
-  id?: number;
-
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -18,9 +8,4 @@ export class CreateQuantityUnitDto {
   @IsNotEmpty()
   @IsString()
   short_name: string;
-
-  @IsOptional()
-  @IsInt()
-  @IsPositive()
-  user_id?: number;
 }
