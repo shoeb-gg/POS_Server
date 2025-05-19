@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { SupplierService } from './supplier.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { Supplier } from './entities/supplier.entity';
-import { ResponseDto } from 'src/common/models/response.dto';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 import { UserID } from 'src/core/utils/user.decorator';
 
 @Controller('supplier')
@@ -26,26 +30,38 @@ export class SupplierController {
     return await this.supplierService.create(createSupplierDto, +userID);
   }
 
-  @Get()
-  findAll() {
-    return this.supplierService.findAll();
+  @Get('all')
+  async findAll(
+    @UserID() userID: number,
+    @Query('pageNumber') pageNumber: number,
+    @Query('pageSize') pageSize: number,
+    @Query('query') query: string,
+  ): Promise<FindAllResponseDto<Supplier[]>> {
+    return await this.supplierService.findAll(
+      +userID,
+      +pageNumber,
+      +pageSize,
+      query,
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.supplierService.findOne(+id);
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<ResponseDto<Supplier | null>> {
+    return await this.supplierService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
+  async update(
+    @Param('id') id: number,
     @Body() updateSupplierDto: UpdateSupplierDto,
-  ) {
-    return this.supplierService.update(+id, updateSupplierDto);
+  ): Promise<ResponseDto<Supplier | null>> {
+    return await this.supplierService.update(+id, updateSupplierDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.supplierService.remove(+id);
+  async remove(@Param('id') id: number): Promise<ResponseDto<null>> {
+    return await this.supplierService.remove(+id);
   }
 }
