@@ -1,19 +1,13 @@
 import {
   IsDate,
   IsEmail,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
-  IsPositive,
   IsString,
 } from 'class-validator';
 
 export class CreateSupplierDto {
-  @IsOptional()
-  @IsPositive()
-  id?: number;
-
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -41,11 +35,6 @@ export class CreateSupplierDto {
   @IsOptional()
   @IsString()
   address?: string | null;
-
-  @IsOptional()
-  @IsInt()
-  @IsPositive()
-  user_id?: number;
 
   @IsOptional()
   @IsDate()

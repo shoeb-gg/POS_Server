@@ -1,17 +1,6 @@
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-  IsUrl,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateCategoryDto {
-  @IsOptional()
-  @IsPositive()
-  id?: number;
-
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -20,9 +9,4 @@ export class CreateCategoryDto {
   @IsString()
   @IsUrl()
   image: string | null;
-
-  @IsOptional()
-  @IsInt()
-  @IsPositive()
-  user_id?: number;
 }

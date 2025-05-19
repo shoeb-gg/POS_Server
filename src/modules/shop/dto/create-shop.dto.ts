@@ -1,17 +1,6 @@
-import {
-  IsDate,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateShopDto {
-  @IsOptional()
-  @IsPositive()
-  id?: number;
-
   @IsOptional()
   @IsDate()
   created_at?: Date;
@@ -35,9 +24,4 @@ export class CreateShopDto {
   @IsOptional()
   @IsString()
   description?: string;
-
-  @IsOptional()
-  @IsInt()
-  @IsPositive()
-  user_id?: number;
 }
