@@ -26,7 +26,7 @@ export class SupplierController {
   async create(
     @Body() createSupplierDto: CreateSupplierDto,
     @UserID() userID: number,
-  ): Promise<ResponseDto<Supplier | null>> {
+  ): Promise<ResponseDto<Supplier>> {
     return await this.supplierService.create(createSupplierDto, +userID);
   }
 

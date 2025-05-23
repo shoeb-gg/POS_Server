@@ -78,18 +78,17 @@ model currency {
 }
 
 model customer {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   name       String
   email      String?
   phone      String
-  dob        String?
   country    String?
   city       String?
   address    String?
   user_id    Int
-  created_on DateTime? @default(now()) @db.Timestamptz(6)
-  updated_on DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
-  user       user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_user_id")
+  created_on DateTime @default(now()) @db.Timestamptz(6)
+  updated_on DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  user       user     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_user_id")
 }
 
 model expense {
