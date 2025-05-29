@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { UserID } from 'src/core/utils/user.decorator';
-import { ResponseDto } from 'src/common/models/response.dto';
+import {
+  FindAllResponseDto,
+  ResponseDto,
+} from 'src/common/models/response.dto';
 import { Customer } from './entities/customer.entity';
 
 @Controller('customer')
@@ -26,26 +30,38 @@ export class CustomerController {
     return await this.customerService.create(createCustomerDto, +userID);
   }
 
-  @Get()
-  findAll() {
-    return this.customerService.findAll();
+  @Get('all')
+  async findAll(
+    @UserID() userID: number,
+    @Query('pageNumber') pageNumber: number,
+    @Query('pageSize') pageSize: number,
+    @Query('query') query: string,
+  ): Promise<FindAllResponseDto<Customer[]>> {
+    return await this.customerService.findAll(
+      +userID,
+      +pageNumber,
+      +pageSize,
+      query,
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerService.findOne(+id);
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<ResponseDto<Customer | null>> {
+    return await this.customerService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
+  async update(
+    @Param('id') id: number,
     @Body() updateCustomerDto: UpdateCustomerDto,
-  ) {
-    return this.customerService.update(+id, updateCustomerDto);
+  ): Promise<ResponseDto<Customer | null>> {
+    return await this.customerService.update(+id, updateCustomerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.customerService.remove(+id);
+  async remove(@Param('id') id: number): Promise<ResponseDto<null>> {
+    return await this.customerService.remove(+id);
   }
 }
