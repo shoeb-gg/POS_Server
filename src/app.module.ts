@@ -11,6 +11,7 @@ import { SupplierModule } from './modules/entities/supplier/supplier.module';
 import { AuthGuard } from './core/utils/user-auth.guard';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { CustomerModule } from './modules/entities/customer/customer.module';
+import { ExpenseModule } from './modules/expense/expense.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CustomerModule } from './modules/entities/customer/customer.module';
     AuthModule,
     SupplierModule,
     CustomerModule,
+    ExpenseModule,
   ],
   controllers: [AppController],
   providers: [
