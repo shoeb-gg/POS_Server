@@ -1,15 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { ResponseDto } from 'src/common/models/response.dto';
+import { Expense } from './entities/expense.entity';
 
 @Controller('expense')
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
   @Post()
-  create(@Body() createExpenseDto: CreateExpenseDto) {
-    return this.expenseService.create(createExpenseDto);
+  async create(
+    @Body() createExpenseDto: CreateExpenseDto,
+  ): Promise<ResponseDto<Expense>> {
+    return await this.expenseService.create(createExpenseDto);
   }
 
   @Get()
